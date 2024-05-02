@@ -52,7 +52,6 @@ class A_EYE():
     def Service(self):
 
         HandPose = self.HANDPOSE.GetHandMarkPos(self.frame)
-        # frame = HandPose[0]
 
         ThumbX,ThumbY,IndexX,IndexY,MiddleX,MiddleY = 0,0,0,0,0,0
         
@@ -75,7 +74,7 @@ class A_EYE():
             self.frame = HandPose[0]
          
         self.OBJECT.CURRENT_OBJECT_ANNOUNCEED = self.CURRENT_OBJECT_ANNOUNCEED
-        self.frame = self.OBJECT.ObjectDetect(self.frame,ThumbX,ThumbY,IndexX,IndexY,self.ACTION_STATE[3])
+        self.frame = self.OBJECT.ObjectDetect(self.frame,ThumbX,ThumbY,IndexX,IndexY,self.ACTION_STATE[3],self.TIMER)
         if(self.CURRENT_OBJECT_ANNOUNCEED != self.OBJECT.CURRENT_OBJECT_ANNOUNCEED):
             self.CURRENT_OBJECT_ANNOUNCEED= self.OBJECT.CURRENT_OBJECT_ANNOUNCEED
         
@@ -85,6 +84,7 @@ class A_EYE():
         Stream = self.Streaming()
 
         while Stream:
+            
             if Stream.isOpened():
 
                 ret, frame = Stream.read()
@@ -103,13 +103,12 @@ class A_EYE():
 
                     self.ShowDetail()
 
-                    
-
                     cv2.imshow("A_EYE",frame)
 
             key = cv2.waitKey(1)
-            if key == ord("s"):
-                break
+
+            if key == ord("s"):break
 
         cv2.destroyAllWindows()
+
         Stream.release()
