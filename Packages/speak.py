@@ -31,4 +31,37 @@ class Text_To_Voice():
         thread = threading.Thread(target=self.Say,args=[text,rate])
 
         thread.start()
+        
+from playsound import playsound
+import time
+
+class Sound():
+    
+    SOUNDS_PATH = {
+    	"Noteflight-1":"/path"
+    }
+    
+    def __init__(self) -> None:
+        
+        return 
+        
+    def Play(self,Type,Rate,LoopType):
+        
+        #if( LoopType == "Until-Touch" ):
+            
+         #   while True:
+          #      return
+        
+        if( Type not in self.SOUNDS_PATH.keys() ):
+            
+            return "error-No Type"
+                
+        for i in LoopType:
+            
+            playsound(self.SOUNDS_PATH[Type])
+            
+            time.wait(rate)
+        
+        
+        return
 
