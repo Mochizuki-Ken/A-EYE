@@ -44,7 +44,7 @@ class Objects():
         
         return self.OBJECTS_MODEL(frame)
 
-    def ObjectDetect( self,frame,HandPosX1,HandPosY1,HandPosX2,HandPosY2,CurrentAction,Time ):
+    def ObjectDetect( self,frame,ThumbX,ThumbY,IndexX,IndexY,CurrentAction,Time ):
 
         RESULTS = self.Objects_Model_fit(frame)
         BOXES = RESULTS[0].boxes.cpu().numpy()
@@ -57,12 +57,12 @@ class Objects():
         for i in range( len( XYXYS ) ):
 
             Object_Name = self.OBJECTS_LABEL[ int( CLASS_ID[ int(i) ] ) ]
-            x1,y1,x2,y2 = int( XYXYS[i][0] ), int( XYXYS[i][1] ), int( XYXYS[i][2] ), int( XYXYS[i][3] ) 
+            ObjX1,ObjY1,ObjX2,ObjY2 = int( XYXYS[i][0] ), int( XYXYS[i][1] ), int( XYXYS[i][2] ), int( XYXYS[i][3] ) 
             Confidence = CONFIDENCE[i]
             
             if( CurrentAction == "INDEX_DOUBLE_CLICK" ):
                 
-                if( HandPosX1 and self.ACTION.Touched_Object_Detect(HandPosX1,HandPosY1,HandPosX2,HandPosY2,x1,y1,x2,y2) ):
+                if( ThumbX and self.ACTION.Touched_Object_Detect(ThumbX,ThumbY,IndexX,IndexY,ObjX1,ObjY1,ObjX2,ObjY2) ):
                     
                     cv2.putText(frame,'cto: '+Object_Name,(350,150),cv2.FONT_HERSHEY_COMPLEX ,self.FONT_SIZE,self.BLUE,2 )
                     
@@ -71,10 +71,16 @@ class Objects():
                         self.SPEAK.Say(text=Object_Name)
 
                         self.CURRENT_OBJECT_ANNOUNCEED = True 
+                        
             
             if( Object_Name in self.TARGET_OBJECT ):
+
+                ObjPos = {"ObjX1":ObjX1,"ObjY1":ObjY1,"ObjX2":ObjX2,"ObjY2":ObjY2}
+
+                HandPos = {"ThumbX":ThumbX,"ThumbY":ThumbY,"IndexX":IndexX,"IndexY":IndexY}
                 
-                self.NAVIGATE.NavigateProduct()
+                self.NAVIGATE.NavigateProduct(HandPos,ObjPos)
+
                                   
             if(Object_Name in self.CASH_COUNTER.keys()):
 
@@ -102,9 +108,9 @@ class Objects():
 
                     MONEY_APPEARED = 1
 
-            cv2.rectangle(frame,(x1,y1),(x2,y2),self.GREEN,2)
-            cv2.putText(frame,Object_Name,(x1,y1),cv2.FONT_HERSHEY_COMPLEX ,0.6,self.GREEN,2)
-            cv2.putText(frame,str(Confidence),(x1,y1+20),cv2.FONT_HERSHEY_COMPLEX ,0.6,self.GREEN,2)
+            cv2.rectangle(frame,(ObjX1,ObjY1),(ObjX2,ObjY2),self.GREEN,2)
+            cv2.putText(frame,Object_Name,(ObjX1,ObjY1),cv2.FONT_HERSHEY_COMPLEX ,0.6,self.GREEN,2)
+            cv2.putText(frame,str(Confidence),(ObjX1,ObjY1+20),cv2.FONT_HERSHEY_COMPLEX ,0.6,self.GREEN,2)
 
         self.CASH_COUNTER = {"hkd10":0,"hkd20":0,"hkd50":0,"hkd100":0,"hkd500":0,}
                 
