@@ -1,1 +1,1 @@
-__all__ = ["action","AEYE","handPose","navigate","objects","speak","voice"]
+__all__ = ["action","AEYE","handPose","navigate","objects","speak","voice","sound","AeyeMath"]

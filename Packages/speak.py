@@ -26,11 +26,9 @@ class Text_To_Voice():
 
         os.system(f"say {text} -r {rate}")
 
+
     def ThreadSpeak(self,text,rate = 180):
 
         thread = threading.Thread(target=self.Say,args=[text,rate])
 
         thread.start()
-        
-
-

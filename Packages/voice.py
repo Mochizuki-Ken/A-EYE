@@ -1,7 +1,10 @@
 import pyaudio
 from vosk import Model, KaldiRecognizer
+
 from .speak import Text_To_Voice
+
 class Voice():
+
     def __init__(self) -> None:
 
         self.SPEAKING = False
@@ -47,16 +50,10 @@ class Voice():
 
                 return FinalText
     
-    def StartMIC(self):
+    def StartMIC(self,Text = "有咩幫到你!"):
 
-        self.SPEAK.Say("有咩幫到你!")
+        if( Text != "") : self.SPEAK.Say(Text)
 
         TEXT_INPUT = self.GetVoice()
 
-        Response_String = self.GetResponse(TEXT_INPUT)
-
-        self.SPEAK.Say(Response_String)
-
         return TEXT_INPUT
-    
-# Voice().StartMic()

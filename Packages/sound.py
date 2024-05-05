@@ -1,18 +1,17 @@
-from playsound import playsound
-import time
-import asyncio
 import threading
+
+from playsound import playsound
 
 class Sound():
     
     SOUNDS_PATH = {
-    	"Note-1":"./Media/Sound/Note1.mp3",
-        "Note-2":"./Media/Sound/Note2.mp3",
-        "Note-Fast":"./Media/Sound/NoteFast.mp3",
-        "Note-Fast-2":"./Media/Sound/NoteFast.mp3",
-        "Note-Fast-3":"./Media/Sound/NoteFast.mp3",
-        "Done":"./Media/Sound/Done.mp3",
-        "Error":"./Media/Sound/Error.mp3",
+    	"Note-1":"Media/Sound/Note1.mp3",
+        "Note-2":"Media/Sound/Note2.mp3",
+        "Note-Fast":"Media/Sound/NoteFast.mp3",
+        "Note-Fast-2":"Media/Sound/NoteFast.mp3",
+        "Note-Fast-3":"Media/Sound/NoteFast.mp3",
+        "Done":"Media/Sound/Done.mp3",
+        "Error":"Media/Sound/Error.mp3",
     }
     
     def __init__(self) -> None:
@@ -23,25 +22,17 @@ class Sound():
         
     def DoneSound(self):
         
-        playsound( self.SOUNDS_PATH["Done"] )
+        PATH = str(self.SOUNDS_PATH["Done"])
+        
+        threading.Thread(target=playsound, args=(PATH,), daemon=True).start()
         
         return 
-        
-    async def Play(self,Type,Speed,LoopType):
-        
-        if( Type not in self.SOUNDS_PATH.keys() ):
-            
-            return "error-No Type"
-                
-        for i in LoopType:
-            
-            threading.Thread(target=playsound, args=('./Media/Sound/song_fast.mp3',), daemon=True).start()
+    
+    def ThreadPlaySound(self,Type):
 
-            await asyncio.sleep(Speed)
+        PATH = str(self.SOUNDS_PATH[Type])
+        
+        threading.Thread(target=playsound, args=(PATH,), daemon=True).start()
 
         return
-    
-
-# asyncio.run(p())
-
-
+   
