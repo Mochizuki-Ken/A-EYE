@@ -3,6 +3,7 @@ import cv2
 from .action import Action
 from .handPose import HandPose
 from .objects import Objects
+from .speak import Text_To_Voice
 
 class A_EYE():
 
@@ -17,6 +18,7 @@ class A_EYE():
 
         self.ACTION = Action()
         self.HANDPOSE = HandPose()
+        self.SPEAK = Text_To_Voice()
         self.OBJECT = 0#Objects()
 
         self.ACTION_STATE = [0,0,0,"NONE","NONE"]#[ click state 0 = up / 1 = down , last time , click count , active click type]
@@ -28,6 +30,8 @@ class A_EYE():
         self.FRAME_HEIGHT = 0
 
         self.HAND_DISAPPEAR_COUNT = 0
+
+        self.CLICK_TYPE = ["MIDDLE_DOUBLE_CLICK","INDEX_DOUBLE_CLICK"]
 
     def ShowDetail(self):
 
@@ -66,7 +70,9 @@ class A_EYE():
 
             self.ACTION_STATE = self.ACTION.ACTION_STATE
 
-            self.HAND_DISAPPEAR_COUNT = 0
+            if( self.ACTION_STATE[3] in self.CLICK_TYPE and self.HAND_DISAPPEAR_COUNT == 0):
+
+                self.HAND_DISAPPEAR_COUNT = 0
 
             ThumbX,ThumbY,IndexX,IndexY,MiddleX,MiddleY = HandPose[1]["ThumbX"],HandPose[1]["ThumbY"],HandPose[1]["IndexX"],HandPose[1]["IndexY"],HandPose[1]["MiddleX"],HandPose[1]["MiddleY"],
 
@@ -81,7 +87,7 @@ class A_EYE():
                 self.TIMER
             )
 
-        elif ( self.HAND_DISAPPEAR_COUNT >=3 ):
+        elif ( self.HAND_DISAPPEAR_COUNT >=5 ):
 
             self.ACTION_STATE = [0,0,0,"NONE","NONE"]
 
@@ -90,13 +96,10 @@ class A_EYE():
         else:
 
             self.HAND_DISAPPEAR_COUNT += 1
-
-
-
-
          
         self.OBJECT.CURRENT_OBJECT_ANNOUNCEED = self.CURRENT_OBJECT_ANNOUNCEED
         self.frame = self.OBJECT.ObjectDetect(self.frame,ThumbX,ThumbY,IndexX,IndexY,self.ACTION_STATE[3],HandArea,self.TIMER)
+        self.OBJECT.HandEvent(self.ACTION_STATE[3])
         if(self.CURRENT_OBJECT_ANNOUNCEED != self.OBJECT.CURRENT_OBJECT_ANNOUNCEED):
             self.CURRENT_OBJECT_ANNOUNCEED= self.OBJECT.CURRENT_OBJECT_ANNOUNCEED
         
@@ -117,6 +120,8 @@ class A_EYE():
 
                     if( self.FRAME_WIDTH == 0 and self.FRAME_HEIGHT == 0) :
 
+                        #Do When First Frame Captured
+
                         self.FRAME_WIDTH = frame.shape[1]
                         self.FRAME_HEIGHT = frame.shape[0]
 
@@ -125,6 +130,10 @@ class A_EYE():
 
                         self.OBJECT = Objects(self.FRAME_WIDTH,self.FRAME_HEIGHT)
 
+                        self.SPEAK.ThreadSpeak(temp="Welcome")
+
+
+
                         print(self.FRAME_WIDTH,self.FRAME_HEIGHT)
                     
                     self.frame = frame
@@ -132,6 +141,7 @@ class A_EYE():
                     self.ACTION.CURRENT_OBJECT_ANNOUNCEED = self.CURRENT_OBJECT_ANNOUNCEED 
                     self.ACTION.ActionCheck(self.TIMER)
                     self.CURRENT_OBJECT_ANNOUNCEED = self.ACTION.CURRENT_OBJECT_ANNOUNCEED
+                    self.OBJECT.CURRENT_OBJECT_ANNOUNCEED = self.CURRENT_OBJECT_ANNOUNCEED
 
                     self.TIMER += 1
 

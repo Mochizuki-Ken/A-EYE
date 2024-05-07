@@ -12,7 +12,7 @@ class Objects():
 
     OBJECTS_MODEL_PT_FILE = "./Test/best-2.pt"
 
-    OBJECTS_LABEL = ["薯片","粟米片","咖啡","卫生纸","牙膏","保温瓶","hkd10","hkd100","hkd20","hkd50","hkd500"]
+    OBJECTS_LABEL = ["薯片","粟米片","咖啡","衛生紙","牙膏","保温瓶","hkd10","hkd100","hkd20","hkd50","hkd500"]
 
     GREEN = (0, 255, 0) 
     RED = (0, 0, 255) 
@@ -75,6 +75,8 @@ class Objects():
             self.TARGET_OBJECTS.pop(self.TARGET_OBJECTS.index(Object_Name))
 
             self.TARGET_OBJECT = ""    
+
+            self.SPEAK.ThreadSpeak(text = f"搵到目標物品{Object_Name}")
                             
             self.SOUND.DoneSound()
 
@@ -120,7 +122,7 @@ class Objects():
 
             self.SOUND.ThreadPlaySound( Type = "Note-1")
 
-            UserInput = self.VOICE.StartMIC(Text = "")
+            UserInput = self.VOICE.StartCantonese()
 
             if( UserInput in self.FOUND_OBJECTS ) : 
 
@@ -149,6 +151,42 @@ class Objects():
             return self.TARGET_OBJECT
 
         return
+    
+    def HandEvent(self,CurrentAction):
+
+        if(CurrentAction == "INDEX_DOUBLE_CLICK" and self.CURRENT_OBJECT_ANNOUNCEED == False):
+
+            self.SOUND.ThreadPlaySound("Note-1")
+
+            Input_Text = self.VOICE.StartCantonese()
+
+            print(Input_Text)
+
+            if( Input_Text and ( Input_Text[:3] == "我想買" or Input_Text[:3] == "我想搵" ) ):
+                
+                if( Input_Text[3:] in self.TARGET_OBJECTS ):
+
+                    self.SPEAK.ThreadSpeak("已經搵緊呢個物品")
+                    
+                elif( Input_Text[3:] in self.OBJECTS_LABEL):
+
+                    self.TARGET_OBJECTS.append(Input_Text[3:])
+
+                    self.SPEAK.ThreadSpeak(f"添加尋找物品{Input_Text[3:]}")
+
+                    self.SOUND.ThreadPlaySound("Note-1")
+            
+            else :
+
+                response = self.VOICE.GetResponse(Input_Text)
+
+                self.SPEAK.ThreadSpeak(f"{response}")
+
+                
+            self.SOUND.ThreadPlaySound("Note-1")
+
+            self.CURRENT_OBJECT_ANNOUNCEED = True 
+
 
     def ObjectDetect( self,frame,ThumbX,ThumbY,IndexX,IndexY,CurrentAction,HandArea,Time ):
 
@@ -181,47 +219,27 @@ class Objects():
             OBJECT_NAME = self.ACTION.Hold_Detection( Object_Name,HandPos,ObjPos,HandArea,self.TIMER)
             
             if (OBJECT_NAME): 
+
+                if ( not self.CheckIfTargetObj(OBJECT_NAME) ) :
+
+                    self.SPEAK.Say(OBJECT_NAME)
+
+            # if( CurrentAction == "INDEX_DOUBLE_CLICK" ):
                 
-                self.SPEAK.Say(OBJECT_NAME)
-
-                self.CheckIfTargetObj(OBJECT_NAME)
-
-            if( CurrentAction == "INDEX_DOUBLE_CLICK" ):
-                
-                if( Hand and self.ACTION.Touched_Object_Detect(ThumbX,ThumbY,IndexX,IndexY,ObjX1,ObjY1,ObjX2,ObjY2) ):
+            #     if( Hand and self.ACTION.Touched_Object_Detect(ThumbX,ThumbY,IndexX,IndexY,ObjX1,ObjY1,ObjX2,ObjY2) ):
                     
-                    cv2.putText(frame,'cto: '+Object_Name,(350,150),cv2.FONT_HERSHEY_COMPLEX ,self.FONT_SIZE,self.BLUE,2 )
+            #         cv2.putText(frame,'cto: '+Object_Name,(350,150),cv2.FONT_HERSHEY_COMPLEX ,self.FONT_SIZE,self.BLUE,2 )
                     
-                    if( self.CURRENT_OBJECT_ANNOUNCEED == False and (Object_Name not in self.CASH_COUNTER.keys())):
+            #         if( self.CURRENT_OBJECT_ANNOUNCEED == False and (Object_Name not in self.CASH_COUNTER.keys())):
 
-                        self.SPEAK.Say(text=Object_Name)
+            #             self.SPEAK.Say(text=Object_Name)
 
-                        self.CURRENT_OBJECT_ANNOUNCEED = True 
+            #             self.CURRENT_OBJECT_ANNOUNCEED = True 
 
-                        self.CheckIfTargetObj(Object_Name)
+            #             self.CheckIfTargetObj(Object_Name)
 
-            if(CurrentAction == "MIDDLE_DOUBLE_CLICK" and self.CURRENT_OBJECT_ANNOUNCEED == False):
+            self.HandEvent(CurrentAction)
 
-                self.SOUND.ThreadPlaySound("Note-1")
-
-                Input_Text = self.VOICE.StartMIC()
-
-                print(Input_Text)
-
-                if( Input_Text[:3] == "我要买" or Input_Text[:3] == "我想买"):
-                    
-                    if( Input_Text[3:] in self.TARGET_OBJECTS ):
-                        self.SPEAK.ThreadSpeak("已經搵緊呢個物品")
-                    
-                    elif( Input_Text[3:] in self.OBJECTS_LABEL):
-
-                        self.TARGET_OBJECTS.append(Input_Text[3:])
-
-                        self.SPEAK.ThreadSpeak(f"添加尋找物品{Input_Text[3:]}")
-                
-                self.SOUND.ThreadPlaySound("Note-1")
-
-                self.CURRENT_OBJECT_ANNOUNCEED = True 
             
             if( Object_Name in self.TARGET_OBJECTS and Hand and Object_Name not in self.FOUND_OBJECTS): 
 

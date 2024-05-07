@@ -64,8 +64,6 @@ class Action():
 
             return False
         
-        # print(HandArea,area)
-
         if( max(HandArea,area)/min(HandArea,area) <= 1.3  or HandArea < area):
 
             print("abs(HandArea - area) <= 300")

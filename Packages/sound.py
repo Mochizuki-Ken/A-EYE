@@ -36,3 +36,4 @@ class Sound():
 
         return
    
+Sound().DoneSound()
