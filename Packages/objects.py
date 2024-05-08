@@ -7,6 +7,7 @@ from .speak import Text_To_Voice
 from .navigate import Navigate
 from .sound import Sound
 from .voice import Voice
+from .product import Product
 
 class Objects():
 
@@ -35,13 +36,7 @@ class Objects():
         
         self.CURRENT_OBJECT_ANNOUNCEED = False
 
-        self.TARGET_OBJECTS = []
-
-        self.FOUND_OBJECTS_POS ={}
-
-        self.FOUND_OBJECTS = []
-
-        self.TARGET_OBJECT = ""
+        self.PRODUCT = Product()
 
         self.ACTION = Action()
 
@@ -65,93 +60,6 @@ class Objects():
         
         return self.OBJECTS_MODEL(frame)
     
-    def CheckIfTargetObj(self,Object_Name):
-        if( Object_Name == self.TARGET_OBJECT) : 
-
-            del self.FOUND_OBJECTS_POS[Object_Name]
-                            
-            self.FOUND_OBJECTS.pop(self.FOUND_OBJECTS.index(Object_Name))
-
-            self.TARGET_OBJECTS.pop(self.TARGET_OBJECTS.index(Object_Name))
-
-            self.TARGET_OBJECT = ""    
-
-            self.SPEAK.ThreadSpeak(text = f"搵到目標物品{Object_Name}")
-                            
-            self.SOUND.DoneSound()
-
-            return True
-        
-        return False
-    
-    def ChooseTargetObject( self,Count = 1 ):
-
-        if( len(self.FOUND_OBJECTS) == 1 ):
-
-            self.TARGET_OBJECT = self.FOUND_OBJECTS[0]
-
-            self.SOUND.ThreadPlaySound( Type = "Note-1")
-
-            self.SPEAK.Say( text = f"搵到{self.TARGET_OBJECT}" )
-
-            return self.TARGET_OBJECT
-        
-        elif ( Count <= 3):
-
-            if( Count == 1):
-
-                TEXT = f"搵到"
-
-                for Obj in self.FOUND_OBJECTS:
-
-                    TEXT += f"{Obj},"
-
-                TEXT += "你想搵邊個先？"
-
-            else:
-
-                TEXT = "唔好意思聽唔清楚, 再講多次呀，唔該! 你想搵"
-
-                for Obj in self.FOUND_OBJECTS:
-
-                    TEXT += f"{Obj} 定係"
-                
-            self.SOUND.ThreadPlaySound( Type = "Note-1")
-
-            self.SPEAK.Say( text = TEXT )
-
-            self.SOUND.ThreadPlaySound( Type = "Note-1")
-
-            UserInput = self.VOICE.StartCantonese()
-
-            if( UserInput in self.FOUND_OBJECTS ) : 
-
-                self.TARGET_OBJECT = UserInput
-
-                return UserInput
-            
-            else :
-                 
-                self.ChooseTargetObject(Count+1)
-            
-        else:
-
-            TEXT = "等我幫你揀啦! 我哋搵咗"
-
-            TEXT += f"{self.FOUND_OBJECTS[0]} 先啦"
-
-            self.SOUND.ThreadPlaySound( Type = "Note-1")
-
-            self.SPEAK.Say( text = TEXT )
-
-            self.SOUND.ThreadPlaySound( Type = "Note-1")
-
-            self.TARGET_OBJECT = self.FOUND_OBJECTS[0]
-
-            return self.TARGET_OBJECT
-
-        return
-    
     def HandEvent(self,CurrentAction):
 
         if(CurrentAction == "INDEX_DOUBLE_CLICK" and self.CURRENT_OBJECT_ANNOUNCEED == False):
@@ -162,25 +70,24 @@ class Objects():
 
             print(Input_Text)
 
-            if( Input_Text and ( Input_Text[:3] == "我想買" or Input_Text[:3] == "我想搵" ) ):
-                
-                if( Input_Text[3:] in self.TARGET_OBJECTS ):
+            Voice_Result = self.VOICE.GetResponse(Input_Text)
 
-                    self.SPEAK.ThreadSpeak("已經搵緊呢個物品")
-                    
-                elif( Input_Text[3:] in self.OBJECTS_LABEL):
+            if( Voice_Result == "Want_To_Buy"):
 
-                    self.TARGET_OBJECTS.append(Input_Text[3:])
+                self.PRODUCT.FindProduct()
 
-                    self.SPEAK.ThreadSpeak(f"添加尋找物品{Input_Text[3:]}")
+            elif( Voice_Result == "Cancel_Target"):
 
-                    self.SOUND.ThreadPlaySound("Note-1")
+                self.PRODUCT.CancelFindProduct()
+
+            elif( Voice_Result == "Discount"):
+
+                self.PRODUCT.SayDiscount()
+
+            else:
+
+                self.SPEAK.ThreadSpeak(Voice_Result)
             
-            else :
-
-                response = self.VOICE.GetResponse(Input_Text)
-
-                self.SPEAK.ThreadSpeak(f"{response}")
 
                 
             self.SOUND.ThreadPlaySound("Note-1")
@@ -220,40 +127,24 @@ class Objects():
             
             if (OBJECT_NAME): 
 
-                if ( not self.CheckIfTargetObj(OBJECT_NAME) ) :
-
-                    self.SPEAK.Say(OBJECT_NAME)
-
-            # if( CurrentAction == "INDEX_DOUBLE_CLICK" ):
-                
-            #     if( Hand and self.ACTION.Touched_Object_Detect(ThumbX,ThumbY,IndexX,IndexY,ObjX1,ObjY1,ObjX2,ObjY2) ):
-                    
-            #         cv2.putText(frame,'cto: '+Object_Name,(350,150),cv2.FONT_HERSHEY_COMPLEX ,self.FONT_SIZE,self.BLUE,2 )
-                    
-            #         if( self.CURRENT_OBJECT_ANNOUNCEED == False and (Object_Name not in self.CASH_COUNTER.keys())):
-
-            #             self.SPEAK.Say(text=Object_Name)
-
-            #             self.CURRENT_OBJECT_ANNOUNCEED = True 
-
-            #             self.CheckIfTargetObj(Object_Name)
+                self.PRODUCT.CheckIfTargetObj(OBJECT_NAME) 
 
             self.HandEvent(CurrentAction)
 
             
-            if( Object_Name in self.TARGET_OBJECTS and Hand and Object_Name not in self.FOUND_OBJECTS): 
+            if( Object_Name in self.PRODUCT.TARGET_PRODUCTS and Hand and Object_Name not in self.PRODUCT.FOUND_PRODUCTS): 
 
-                self.FOUND_OBJECTS.append(Object_Name)
+                self.PRODUCT.FOUND_PRODUCTS.append(Object_Name)
 
-            if( len(self.FOUND_OBJECTS) >= 1 and i >= ( len(XYXYS) - 1 ) and self.TARGET_OBJECT == ""):
+            if( len(self.PRODUCT.FOUND_PRODUCTS) >= 1 and i >= ( len(XYXYS) - 1 ) and self.PRODUCT.TARGET_PRODUCT == ""):
 
-                self.ChooseTargetObject( Count = 1 )
+                self.PRODUCT.ChooseTargetProducts( Count = 1 )
 
-                print("Object_Name in self.TARGET_OBJECT")
+                print("Object_Name in self.PRODUCT.TARGET_PRODUCT")
 
-                self.FOUND_OBJECTS_POS[ self.TARGET_OBJECT ] = ObjPos
+                self.PRODUCT.FOUND_PRODUCTS_POS[ self.PRODUCT.TARGET_PRODUCT ] = ObjPos
 
-            if( self.TARGET_OBJECT != "" and Object_Name == self.TARGET_OBJECT):
+            if( self.PRODUCT.TARGET_PRODUCT != "" and Object_Name == self.PRODUCT.TARGET_PRODUCT):
 
                 self.NAVIGATE.NavigateProduct(HandPos,ObjPos)
 

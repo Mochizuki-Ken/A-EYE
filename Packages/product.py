@@ -1,5 +1,6 @@
-from .speak import Text_to_Voice
+from .voice import Voice
 from .sound import Sound
+from .speak import Text_To_Voice
 from .Data import *
 
 class Product():
@@ -8,13 +9,143 @@ class Product():
         
         self.SOUND = Sound()
         
-        self.SPEAK = Text_to_Voice()
+        self.VOICE = Voice()
+
+        self.SPEAK = Text_To_Voice
         
         self.TARGET_PRODUCTS = []
+
+        self.TARGET_PRODUCT = ""
+
+        self.FOUND_PRODUCTS_POS ={}
         
         self.FOUND_PRODUCTS = []
         
         pass
+
+    def FindProduct(self,c = 1):
+
+        self.SOUND.ThreadPlaySound("Note-1")
+
+        if( c==1 ):
+
+            self.SPEAK.ThreadSpeak("想搵啲乜嘢商品？")
+
+            self.SOUND.ThreadPlaySound("Note-1")
+
+        Text = self.VOICE.GetCantonese()
+
+        if Text == False :
+            
+            if( c<3 ):
+
+                self.SOUND.ThreadPlaySound("Note-1")
+
+                self.SPEAK.ThreadSpeak("唔好意思,聽唔清楚,可以再講多次嗎？")
+
+                self.FindProduct(c=c+1)
+
+            else:
+
+                self.SOUND.ThreadPlaySound("Note-1")
+
+                self.SPEAK.ThreadSpeak("唔好意思,都係聽唔清楚, 請稍後再試")
+
+        else:
+
+            delimiters = ["仲有", "同埋", "和", "加"]
+            
+            for delimiter in delimiters:
+                string = " ".join(string.split(delimiter))
+            
+            result = string.split()
+
+            ProductList = []
+
+            for product_name in result:
+
+                if(product_name in self.TARGET_PRODUCTS):
+
+                    self.SPEAK.ThreadSpeak("已經搵緊呢個物品")
+
+                elif(product_name in PRODUCT_NAME_LIST ):
+
+                    if(product_name in RECOMAND_LIST.keys()):
+
+                        self.SOUND.ThreadPlaySound("Note-1")
+
+                        self.SPEAK.ThreadSpeak(f"{RECOMAND_LIST[product_name][0]} 抵過{product_name} {RECOMAND_LIST[product_name][1]} 蚊喎, 要唔要改買呢個？")
+
+                        self.SOUND.ThreadPlaySound("Note-1")
+
+                        if self.VOICE.Confirm() :
+
+                            product_name = RECOMAND_LIST[product_name][0]
+
+                            self.SOUND.ThreadPlaySound("Note-1")
+
+                            self.SPEAK.ThreadSpeak(f"好,成功將物品更改為{RECOMAND_LIST[product_name][0]}")
+
+                            
+                        else:
+
+                            self.SOUND.ThreadPlaySound("Note-1")
+
+                            self.SPEAK.ThreadSpeak(f"冇問題, 維持原本物品{product_name}")
+
+                    ProductList.append(product_name)
+
+            for product in ProductList:
+
+                self.TARGET_PRODUCTS.append(product)
+
+            Products_Text = ""
+
+            for i in self.TARGET_PRODUCTS:
+
+                Products_Text+=i+","
+
+            self.SOUND.ThreadPlaySound("Note-1")
+
+            self.SPEAK.ThreadSpeak(f"添加尋找物品{Products_Text} 成功")
+
+            self.SOUND.ThreadPlaySound("Note-1")
+
+
+    def CancelFindProduct(self):
+
+        return
+    
+    def SayDiscount(self):
+
+        for i in EVENT_DISCOUNT_LIST:
+
+            self.SPEAK.ThreadSpeak(i)
+            
+        return
+
+
+
+    def CheckIfTargetObj(self,Object_Name):
+        if( Object_Name == self.TARGET_PRODUCTS) : 
+
+            del self.FOUND_PRODUCTS_POS[Object_Name]
+                            
+            self.FOUND_PRODUCTS.pop(self.FOUND_PRODUCTS.index(Object_Name))
+
+            self.TARGET_PRODUCTS.pop(self.TARGET_PRODUCTS.index(Object_Name))
+
+            self.TARGET_PRODUCT = ""    
+
+            self.SPEAK.ThreadSpeak(text = f"搵到目標物品{Object_Name}")
+                            
+            self.SOUND.DoneSound()
+
+            return True
+        
+        return False
+
+
         
     def ChooseTargetProducts( self,Count = 1 ):
 

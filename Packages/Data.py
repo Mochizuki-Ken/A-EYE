@@ -1,3 +1,7 @@
+PRODUCT_NAME_LIST = [
+    "咖啡","牙膏","牙膏2"
+]
+
 PRODUCT_LIST = [
 	{
 		"NAME":"咖啡",
@@ -14,12 +18,12 @@ PRODUCT_LIST = [
 ]
 
 RECOMAND_LIST = {
-    "牙膏":"牙膏2"
+    "牙膏":["牙膏2","12"]
 }
 
-PRODUCT_DISCOUNT_LIST = {
-    "牙膏2":"宜家做緊買一送一優惠"
-}
+# PRODUCT_DISCOUNT_LIST = {
+#     "牙膏2":"宜家做緊買一送一優惠"
+# }
 
 EVENT_DISCOUNT_LIST = [
     "全場生果九五折！買滿200蚊即送富士蘋果一個！"
