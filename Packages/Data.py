@@ -1,0 +1,1 @@
+RECOMAND_LIST = {}
