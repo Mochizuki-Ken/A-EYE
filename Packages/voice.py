@@ -129,7 +129,7 @@ class Voice():
 
     #             return FinalText
             
-    def GetCantonese(self):
+    def GetCantonese(self,limit=30):
 
         audio = pyaudio.PyAudio()
 
@@ -165,7 +165,7 @@ class Voice():
 
             rms = audioop.rms(data, 2)  
 
-            if rms < self.SILENCE_THRESHOLD and is_recording and self.COUNT >= 30:
+            if rms < self.SILENCE_THRESHOLD and is_recording and self.COUNT >= limit:
                 print("Stop Recoerding")
                 is_recording = False
                 break
@@ -202,13 +202,13 @@ class Voice():
 
     #     return TEXT_INPUT
     
-    def StartCantonese(self,Text = "有咩幫到你!",):
+    def StartCantonese(self,Text = "有咩幫到你!",limit=30):
 
         self.COUNT = 0
 
         if( Text != "") : self.SPEAK.Say(Text)
 
-        TEXT_INPUT = self.GetCantonese()
+        TEXT_INPUT = self.GetCantonese(limit=limit)
 
         return TEXT_INPUT
     

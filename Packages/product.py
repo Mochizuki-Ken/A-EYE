@@ -11,7 +11,7 @@ class Product():
         
         self.VOICE = Voice()
 
-        self.SPEAK = Text_To_Voice
+        self.SPEAK = Text_To_Voice()
         
         self.TARGET_PRODUCTS = []
 
@@ -28,9 +28,9 @@ class Product():
         
         TEXT = ""
         
-        for Prodcut in Products_Array:
+        for product in Products_Array:
             
-            TEXT += Product+","
+            TEXT += product+","
             
         return TEXT
 
@@ -40,19 +40,19 @@ class Product():
 
         if( c==1 ):
 
-            self.SPEAK.ThreadSpeak("想搵啲乜嘢商品？")
+            self.SPEAK.ThreadSpeak(text="想搵啲乜嘢商品？")
 
             self.SOUND.ThreadPlaySound("Note-1")
 
-        Text = self.VOICE.GetCantonese()
+        Text = self.VOICE.StartCantonese(Text="",limit=50)
 
-        if Text == False :
+        if Text == False or Text == "":
             
             if( c<3 ):
 
                 self.SOUND.ThreadPlaySound("Note-1")
 
-                self.SPEAK.ThreadSpeak("唔好意思,聽唔清楚,可以再講多次嗎？")
+                self.SPEAK.ThreadSpeak(text="唔好意思,聽唔清楚,可以再講多次嗎？")
 
                 self.FindProduct(c=c+1)
 
@@ -60,12 +60,13 @@ class Product():
 
                 self.SOUND.ThreadPlaySound("Note-1")
 
-                self.SPEAK.ThreadSpeak("唔好意思,都係聽唔清楚, 請稍後再試")
+                self.SPEAK.ThreadSpeak(text="唔好意思,都係聽唔清楚, 請稍後再試")
 
         else:
 
             delimiters = ["仲有", "同埋", "和", "加"]
-            
+
+            string = ""
             for delimiter in delimiters:
                 string = " ".join(string.split(delimiter))
             
@@ -122,7 +123,7 @@ class Product():
     def CancelFindProduct(self):
         
         self.SOUND.ThreadPlaySound("Note-1")
-        
+
         self.SPEAK.ThreadSpeak("想取消咩商品,現在目標商品包括")
         
         Products_Text = self.GetProductString(self.TARGET_PRODUCTS)
@@ -133,7 +134,7 @@ class Product():
         
         DEL_PRODUCTS = []
         
-        Text = self.VOICE.GetCantonese()
+        Text = self.VOICE.StartCantonese(Text="")
         
         for Product in self.TARGET_PRODUCTS :
             
@@ -174,7 +175,7 @@ class Product():
 
 
     def CheckIfTargetObj(self,Object_Name):
-        if( Object_Name == self.TARGET_PRODUCTS) : 
+        if( Object_Name == self.TARGET_PRODUCT) : 
 
             del self.FOUND_PRODUCTS_POS[Object_Name]
                             

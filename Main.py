@@ -1,6 +1,6 @@
 from Packages import *
 
-INPUT_MODE = "http://192.168.0.23:5000/stream" # 0 for Build-in Cam / Url for A-EYE Device
+INPUT_MODE = "http://192.168.0.206:5000/stream" # 0 for Build-in Cam / Url for A-EYE Device
 INPUT_MODE = 0
 
 if __name__ == "__main__":

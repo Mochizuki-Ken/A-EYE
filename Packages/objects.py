@@ -131,6 +131,8 @@ class Objects():
 
             self.HandEvent(CurrentAction)
 
+            print(self.PRODUCT.TARGET_PRODUCTS)
+
             
             if( Object_Name in self.PRODUCT.TARGET_PRODUCTS and Hand and Object_Name not in self.PRODUCT.FOUND_PRODUCTS): 
 
