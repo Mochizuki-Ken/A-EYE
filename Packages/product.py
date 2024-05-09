@@ -113,6 +113,14 @@ class Product():
 
 
     def CancelFindProduct(self):
+        
+        self.SPEAK.ThreadSpeak("想取消咩商品,現在目標商品包括")
+        
+        
+        
+        self.SPEAK.ThreadSpeak("")
+        
+        
 
         return
     
