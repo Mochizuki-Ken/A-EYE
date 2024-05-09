@@ -121,16 +121,46 @@ class Product():
 
     def CancelFindProduct(self):
         
+        self.SOUND.ThreadPlaySound("Note-1")
+        
         self.SPEAK.ThreadSpeak("想取消咩商品,現在目標商品包括")
         
+        Products_Text = self.GetProductString(self.TARGET_PRODUCTS)
         
+        self.SPEAK.ThreadSpeak(Products_Text)
         
+        self.SOUND.ThreadPlaySound("Note-1")
         
+        DEL_PRODUCTS = []
         
-        self.SPEAK.ThreadSpeak("")
+        Text = self.VOICE.GetCantonese()
         
+        for Product in self.TARGET_PRODUCTS :
+            
+            if ( Product in Text ) :
+                
+                DEL_PRODUCTS.append(Product)
+                
+        self.SOUND.ThreadPlaySound("Note-1")
+                
+        self.SPEAK.ThreadSpeak("是否確認刪除商品")
         
-
+        DEL_PRODUCTS_STRING = self.GetProductString(DEL_PRODUCTS)
+        
+        self.SPEAK.ThreadSpeak(DEL_PRODUCTS_STRING)
+        
+        if ( self.VOICE.Confirm() ) :
+            
+            for Product in DEL_PRODUCTS :
+                
+                INDEX = self.TARGET_PRODUCTS.index(Product)
+                
+                self.TARGET_PRODUCTS.pop(INDEX)
+                
+        self.SPEAK.ThreadSpeak("成功刪除商品.")
+        
+        self.SOUND.ThreadPlaySound("Note-1")
+        
         return
     
     def SayDiscount(self):
