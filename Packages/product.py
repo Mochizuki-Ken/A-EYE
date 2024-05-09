@@ -22,6 +22,17 @@ class Product():
         self.FOUND_PRODUCTS = []
         
         pass
+        
+        
+    def GetProductString(self,Products_Array):
+        
+        TEXT = ""
+        
+        for Prodcut in Products_Array:
+            
+            TEXT += Product+","
+            
+        return TEXT
 
     def FindProduct(self,c = 1):
 
@@ -99,11 +110,7 @@ class Product():
 
                 self.TARGET_PRODUCTS.append(product)
 
-            Products_Text = ""
-
-            for i in self.TARGET_PRODUCTS:
-
-                Products_Text+=i+","
+            Products_Text = self.GetProductString(self.TARGET_PRODUCTS)
 
             self.SOUND.ThreadPlaySound("Note-1")
 
@@ -115,6 +122,8 @@ class Product():
     def CancelFindProduct(self):
         
         self.SPEAK.ThreadSpeak("想取消咩商品,現在目標商品包括")
+        
+        
         
         
         
