@@ -118,6 +118,8 @@ class Product():
             self.SPEAK.ThreadSpeak(f"添加尋找物品{Products_Text} 成功")
 
             self.SOUND.ThreadPlaySound("Note-1")
+            
+            return self.TARGET_PRODUCTS
 
 
     def CancelFindProduct(self):
@@ -162,7 +164,7 @@ class Product():
         
         self.SOUND.ThreadPlaySound("Note-1")
         
-        return
+        return self.TARGET_PRODUCTS
     
     def SayDiscount(self):
 
