@@ -1,6 +1,4 @@
-PRODUCT_NAME_LIST = [
-    "咖啡","牙膏","牙膏2"
-]
+PRODUCT_NAME_LIST = ["薯片","粟米片","咖啡","衛生紙","牙膏","保温瓶","hkd10","hkd100","hkd20","hkd50","hkd500","牙膏2"]
 
 PRODUCT_LIST = [
 	{
@@ -18,7 +16,7 @@ PRODUCT_LIST = [
 ]
 
 RECOMAND_LIST = {
-    "牙膏":["牙膏2","12"]
+    "牙膏":["牙膏2","5"]
 }
 
 # PRODUCT_DISCOUNT_LIST = {
@@ -26,5 +24,5 @@ RECOMAND_LIST = {
 # }
 
 EVENT_DISCOUNT_LIST = [
-    "全場生果九五折！買滿200蚊即送富士蘋果一個！"
+    "全場買滿$500有八五折優惠"
 ]

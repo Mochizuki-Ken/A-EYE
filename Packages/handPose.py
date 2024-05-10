@@ -31,7 +31,7 @@ class HandPose():
             y = int(landmark.y * self.FRAME_HEIGHT)
             landmarks.append((x, y))
 
-        print(landmarks)
+        # print(landmarks)
 
         return EYE_MATH.calculate_hand_area(landmarks)
     

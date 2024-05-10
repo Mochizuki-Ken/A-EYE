@@ -40,11 +40,11 @@ class Product():
 
         if( c==1 ):
 
-            self.SPEAK.ThreadSpeak(text="想搵啲乜嘢商品？")
+            self.SPEAK.Say(text="想搵啲乜嘢商品？")
 
             self.SOUND.ThreadPlaySound("Note-1")
 
-        Text = self.VOICE.StartCantonese(Text="",limit=50)
+        Text = self.VOICE.StartCantonese(Text="",limit=40)
 
         if Text == False or Text == "":
             
@@ -52,7 +52,7 @@ class Product():
 
                 self.SOUND.ThreadPlaySound("Note-1")
 
-                self.SPEAK.ThreadSpeak(text="唔好意思,聽唔清楚,可以再講多次嗎？")
+                self.SPEAK.Say(text="唔好意思,聽唔清楚,可以再講多次嗎？")
 
                 self.FindProduct(c=c+1)
 
@@ -74,6 +74,8 @@ class Product():
             
             result = Text.split()
 
+            print(result)
+
             ProductList = []
 
             for product_name in result:
@@ -88,7 +90,7 @@ class Product():
 
                         self.SOUND.ThreadPlaySound("Note-1")
 
-                        self.SPEAK.ThreadSpeak(f"{RECOMAND_LIST[product_name][0]} 抵過{product_name} {RECOMAND_LIST[product_name][1]} 蚊喎, 要唔要改買呢個？")
+                        self.SPEAK.Say(f"有第二隻同類商品{RECOMAND_LIST[product_name][0]}, 抵過{product_name} {RECOMAND_LIST[product_name][1]} 蚊喎, 要唔要改買呢個？")
 
                         self.SOUND.ThreadPlaySound("Note-1")
 
@@ -109,6 +111,18 @@ class Product():
 
                     ProductList.append(product_name)
 
+                else:
+
+                    self.SOUND.ThreadPlaySound("Error")
+
+                    self.SPEAK.ThreadSpeak(f"目標商品{product_name}不存在")
+
+            if(len(ProductList) == 0):
+
+                return
+
+            
+
             for product in ProductList:
 
                 self.TARGET_PRODUCTS.append(product)
@@ -128,11 +142,19 @@ class Product():
         
         self.SOUND.ThreadPlaySound("Note-1")
 
-        self.SPEAK.ThreadSpeak("想取消咩商品,現在目標商品包括")
+        if( len(self.TARGET_PRODUCTS) == 0):
+
+            self.SOUND.ThreadPlaySound("Error")
+
+            self.SPEAK.ThreadSpeak("目前沒有任何目標商品")
+
+            return
+
+        self.SPEAK.Say("想取消咩商品,現在目標商品包括")
         
         Products_Text = self.GetProductString(self.TARGET_PRODUCTS)
         
-        self.SPEAK.ThreadSpeak(Products_Text)
+        self.SPEAK.Say(Products_Text)
         
         self.SOUND.ThreadPlaySound("Note-1")
         
@@ -145,29 +167,44 @@ class Product():
             if ( Product in Text ) :
                 
                 DEL_PRODUCTS.append(Product)
+
+        if( len(DEL_PRODUCTS) >= 1 ):
                 
-        self.SOUND.ThreadPlaySound("Note-1")
-                
-        self.SPEAK.ThreadSpeak("是否確認刪除商品")
-        
-        DEL_PRODUCTS_STRING = self.GetProductString(DEL_PRODUCTS)
-        
-        self.SPEAK.ThreadSpeak(DEL_PRODUCTS_STRING)
-        
-        if ( self.VOICE.Confirm() ) :
+            self.SOUND.ThreadPlaySound("Note-1")
+                    
+            self.SPEAK.Say("是否確認刪除商品")
             
-            for Product in DEL_PRODUCTS :
+            DEL_PRODUCTS_STRING = self.GetProductString(DEL_PRODUCTS)
+            
+            self.SPEAK.Say(DEL_PRODUCTS_STRING)
+            
+            if ( self.VOICE.Confirm() ) :
                 
-                INDEX = self.TARGET_PRODUCTS.index(Product)
+                for Product in DEL_PRODUCTS :
+                    
+                    INDEX = self.TARGET_PRODUCTS.index(Product)
+                    
+                    self.TARGET_PRODUCTS.pop(INDEX)
+                    
+                self.SPEAK.ThreadSpeak("成功刪除商品.")
                 
-                self.TARGET_PRODUCTS.pop(INDEX)
+                self.SOUND.ThreadPlaySound("Note-1")
+
+            else:
+
+                self.SPEAK.ThreadSpeak("取消刪除商品.")
                 
-        self.SPEAK.ThreadSpeak("成功刪除商品.")
+                self.SOUND.ThreadPlaySound("Note-1")
+
+            
+            return self.TARGET_PRODUCTS
         
-        self.SOUND.ThreadPlaySound("Note-1")
+        else:
+
+            self.SPEAK.ThreadSpeak("沒有該商品")
+
+            self.SOUND.ThreadPlaySound("Note-1")
         
-        return self.TARGET_PRODUCTS
-    
     def SayDiscount(self):
 
         for i in EVENT_DISCOUNT_LIST:
@@ -189,7 +226,7 @@ class Product():
 
             self.TARGET_PRODUCT = ""    
 
-            self.SPEAK.ThreadSpeak(text = f"搵到目標物品{Object_Name}")
+            self.SPEAK.ThreadSpeak(text = f"搵到目標物品 {Object_Name}")
                             
             self.SOUND.DoneSound()
 
@@ -203,11 +240,13 @@ class Product():
 
         if( len(self.FOUND_PRODUCTS) == 1 ):
 
-            self.TARGET_PRODUCTS = self.FOUND_PRODUCTS[0]
+            self.TARGET_PRODUCT = self.FOUND_PRODUCTS[0]
 
             self.SOUND.ThreadPlaySound( Type = "Note-1")
 
-            self.SPEAK.Say( text = f"搵到{self.TARGET_OBJECT}" )
+            self.SPEAK.Say( text = f"搵到目標商品{self.TARGET_PRODUCT} 喺你前方")
+
+            print(f"搵到{self.TARGET_PRODUCT}")
 
             return self.TARGET_PRODUCTS
         
@@ -243,7 +282,7 @@ class Product():
 
             if( UserInput in self.FOUND_PRODUCTS ) : 
 
-                self.TARGET_PRODUCTS = UserInput
+                self.TARGET_PRODUCT = UserInput
 
                 return UserInput
             
@@ -263,7 +302,7 @@ class Product():
 
             self.SOUND.ThreadPlaySound( Type = "Note-1")
 
-            self.TARGET_PRODUCTS = self.FOUND_PRODUCTS[0]
+            self.TARGET_PRODUCT = self.FOUND_PRODUCTS[0]
 
             return self.TARGET_PRODUCTS
 

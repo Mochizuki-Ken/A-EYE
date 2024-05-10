@@ -68,7 +68,7 @@ class Objects():
 
             Input_Text = self.VOICE.StartCantonese()
 
-            print(Input_Text)
+            # print(Input_Text)
 
             Voice_Result = self.VOICE.GetResponse(Input_Text)
 
@@ -98,6 +98,9 @@ class Objects():
     def ObjectDetect( self,frame,ThumbX,ThumbY,IndexX,IndexY,CurrentAction,HandArea,Time ):
 
         self.NAVIGATE.TIMER = self.TIMER
+
+        # self.PRODUCT.FOUND_PRODUCTS = []
+        # self.PRODUCT.FOUND_PRODUCTS_POS = {}
 
         RESULTS = self.Objects_Model_fit(frame)
         BOXES = RESULTS[0].boxes.cpu().numpy()
@@ -129,7 +132,7 @@ class Objects():
 
                 if self.PRODUCT.CheckIfTargetObj(OBJECT_NAME) == False :
                     
-                    self.SPEAK.ThreadSpeck( "呢個係" + OBJECT_NAME )
+                    self.SPEAK.Say( "呢個係" + OBJECT_NAME )
 
             self.HandEvent(CurrentAction)
 
