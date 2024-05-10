@@ -65,12 +65,14 @@ class Product():
         else:
 
             delimiters = ["仲有", "同埋", "和", "加"]
-
-            string = ""
-            for delimiter in delimiters:
-                string = " ".join(string.split(delimiter))
             
-            result = string.split()
+            for delimiter in delimiters:
+                
+                if( delimiter in Text):
+                	
+                    Text = " ".join(Text.split(delimiter))
+            
+            result = Text.split()
 
             ProductList = []
 
