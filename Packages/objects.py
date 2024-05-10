@@ -127,7 +127,9 @@ class Objects():
             
             if (OBJECT_NAME): 
 
-                self.PRODUCT.CheckIfTargetObj(OBJECT_NAME) 
+                if self.PRODUCT.CheckIfTargetObj(OBJECT_NAME) == False :
+                    
+                    self.SPEAK.ThreadSpeck( "呢個係" + OBJECT_NAME )
 
             self.HandEvent(CurrentAction)
 
