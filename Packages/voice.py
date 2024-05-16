@@ -28,9 +28,10 @@ class Voice():
         "Mision":["我可以幫助視力障礙人士搵到佢哋想搵嘅商品, 同時我都可以推薦最適合佢哋嘅商品, 我仲可以導航佢哋到想去嘅地方添!"],
         "Name":["我叫做A-EYE","可以叫我A-EYE"],
         "DisplayMode":["冇問題, 而家為大家示範我嘅基本功能, 尋找和識別商品, 以及推薦優惠商品."],
+        "Kill":["冇問題，搵到目標張天愛在前方, 啟動加碼射線, 輻射加強版肉醬意粉完成"],
 
         "Yes":["好","可以","冇問題","允許","係","冇錯","確認"],
-        "No":[]
+        "No":[] 
         
     }
 
@@ -39,6 +40,7 @@ class Voice():
     DICT = {
         "Want_To_Buy":["我想搵商品","我要搵商品","幫我搵商品","我想搵物品","我要搵物品","幫我搵物品","搵商品","搵物品","我想搵嘢","我要搵嘢","買嘢","商品"],
         "Cancel_Target":["幫我取消物品","幫我取消","取消物品","取消","刪除"],
+        "Current_Target":["而家有咩目標物品","而家有咩目標商品","而家有咩","搵緊"],
         "Discount":["而家做緊咩優惠","優惠","推廣","折扣","促銷","宣傳","活動"],
         "IntroSelf":["介紹下自己","介紹下你自己","自我介紹下","介紹自己"],
         "Goodmorning":["早晨","早上好","早"],
@@ -48,7 +50,8 @@ class Voice():
         "Gender":["你嘅性別係乜","你係男定女","你係咪男仔","你係咪女仔","性別","男","女"],
         "Mision":["你可以做啲乜","你嘅使命係乜","使命","任務","責任"],
         "Name":["你叫咩名","名字","名"],
-        "DisplayMode":["示範","測試","展示"]
+        "DisplayMode":["示範","測試","展示"],
+        "Kill":"肉醬"
 
 
     }
@@ -58,8 +61,8 @@ class Voice():
 
         self.SPEAKING = False
 
-        # self.VoiceToTextModel = Model("./Packages/vosk-model-small-cn-0.22")
-        # self.recognizer = KaldiRecognizer(self.VoiceToTextModel, 16000) 
+        self.LANG = "CHI"
+
         self.SPEAK = Text_To_Voice()
 
         self.SOUND = Sound()
@@ -150,6 +153,11 @@ class Voice():
             try:
 
                 text = recognizer.recognize_google(audio_source, language='yue-Hant-HK')
+
+                if( self.LANG == "ENG" ) :
+                    
+                    text = recognizer.recognize_google(audio_source, language='en-US')
+
                 print("Result：" + text)
 
                 return text
@@ -162,14 +170,6 @@ class Voice():
         
         return False
 
-    
-    # def StartMIC(self,Text = "有咩幫到你!",):
-
-    #     if( Text != "") : self.SPEAK.Say(Text)
-
-    #     TEXT_INPUT = self.GetVoice()
-
-    #     return TEXT_INPUT
     
     def StartCantonese(self,Text = "有咩幫到你!",limit=30):
 

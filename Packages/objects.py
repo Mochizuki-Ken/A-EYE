@@ -74,7 +74,7 @@ class Objects():
 
             if( Voice_Result == "Want_To_Buy"):
 
-                self.PRODUCT.FindProduct()
+                self.PRODUCT.FindProduct(Input_Text)
 
             elif( Voice_Result == "Cancel_Target"):
 
@@ -83,6 +83,10 @@ class Objects():
             elif( Voice_Result == "Discount"):
 
                 self.PRODUCT.SayDiscount()
+
+            elif( Voice_Result == "Current_Target"):
+
+                self.PRODUCT.SayCurrentTargets
 
             else:
 
@@ -98,9 +102,6 @@ class Objects():
     def ObjectDetect( self,frame,ThumbX,ThumbY,IndexX,IndexY,CurrentAction,HandArea,Time ):
 
         self.NAVIGATE.TIMER = self.TIMER
-
-        # self.PRODUCT.FOUND_PRODUCTS = []
-        # self.PRODUCT.FOUND_PRODUCTS_POS = {}
 
         RESULTS = self.Objects_Model_fit(frame)
         BOXES = RESULTS[0].boxes.cpu().numpy()
@@ -133,6 +134,8 @@ class Objects():
                 if self.PRODUCT.CheckIfTargetObj(OBJECT_NAME) == False :
                     
                     self.SPEAK.Say( "呢個係" + OBJECT_NAME )
+
+                    self.SOUND.ThreadPlaySound("Note-1")
 
             self.HandEvent(CurrentAction)
 

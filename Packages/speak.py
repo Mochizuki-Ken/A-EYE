@@ -4,7 +4,7 @@ import os
 class Text_To_Voice():
 
     SPEACH = {
-        "Welcome":"你好呀! 我係A-EYE , 今日等我陪你一齊買嘢啦, 只要食指拇指雙擊兩下我就會出嚟㗎啦, 只要你同我講我想買乜嘢，我就會帶你去買你想買嘅物品!"
+        "Welcome":"你好呀! 我係A-EYE "#, 今日等我陪你一齊買嘢啦, 只要食指拇指雙擊兩下我就會出嚟㗎啦!
     }
 
     def __init__(self) -> None:

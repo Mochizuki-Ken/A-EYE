@@ -33,48 +33,74 @@ class Product():
             TEXT += product+","
             
         return TEXT
+    
+    def GetProductsFromText(self,Text) :
 
-    def FindProduct(self,c = 1):
+        Products_List = []
+
+        for Product in PRODUCT_LIST:
+
+            if Product in Text:
+
+                Products_List.append(Product)
+
+        if( len( Products_List ) > 0 ):
+            
+            return Products_List
+        
+        else:
+
+            return False
+        
+    def SayCurrentTargets(self):
+
+        ProductString = self.GetProductString(self.TARGET_PRODUCTS)
+
+        if ( ProductString == "" ):
+
+            self.SPEAK.ThreadSpeak("現在沒有任何目標商品")
+
+        else :
+
+            self.SPEAK.ThreadSpeak("現在目標商品包括,"+ProductString)
+
+    def FindProduct(self,Input_Text = "",c = 1):
 
         self.SOUND.ThreadPlaySound("Note-1")
 
-        if( c==1 ):
+        Input_Products_List = self.GetProductsFromText(Input_Text)
 
-            self.SPEAK.Say(text="想搵啲乜嘢商品？")
+        if ( not Input_Products_List ):
 
-            self.SOUND.ThreadPlaySound("Note-1")
+            if( c==1 ):
 
-        Text = self.VOICE.StartCantonese(Text="",limit=40)
-
-        if Text == False or Text == "":
-            
-            if( c<3 ):
+                self.SPEAK.Say(text="想搵啲乜嘢商品？")
 
                 self.SOUND.ThreadPlaySound("Note-1")
 
-                self.SPEAK.Say(text="唔好意思,聽唔清楚,可以再講多次嗎？")
+            Input_Text = self.VOICE.StartCantonese(Text="",limit=40)
 
-                self.FindProduct(c=c+1)
+            Input_Products_List = self.GetProductsFromText(Input_Text)
 
-            else:
-
-                self.SOUND.ThreadPlaySound("Note-1")
-
-                self.SPEAK.ThreadSpeak(text="唔好意思,都係聽唔清楚, 請稍後再試")
-
-        else:
-
-            delimiters = ["仲有", "同埋", "和", "加"]
-            
-            for delimiter in delimiters:
+            if Input_Text == False or Input_Text == "":
                 
-                if( delimiter in Text):
-                	
-                    Text = " ".join(Text.split(delimiter))
-            
-            result = Text.split()
+                if( c<3 ):
 
-            print(result)
+                    self.SOUND.ThreadPlaySound("Note-1")
+
+                    self.SPEAK.Say(text="唔好意思,聽唔清楚,可以再講多次嗎？")
+
+                    self.FindProduct(Input_Text="",c=c+1)
+
+                else:
+
+                    self.SOUND.ThreadPlaySound("Note-1")
+
+                    self.SPEAK.ThreadSpeak(text="唔好意思,都係聽唔清楚, 請稍後再試")
+
+        if True:
+
+            result = Input_Products_List
 
             ProductList = []
 

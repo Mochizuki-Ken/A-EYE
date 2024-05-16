@@ -8,3 +8,5 @@ if __name__ == "__main__":
     Aeye = AEYE.A_EYE(STREAM_INPUT=INPUT_MODE)
 
     Aeye.Start()
+
+
