@@ -39,19 +39,6 @@ class Action():
         ObjX1,ObjY1,ObjX2,ObjY2 = ObjPos["ObjX1"],ObjPos["ObjY1"],ObjPos["ObjX2"],ObjPos["ObjY2"]
         ThumbX,ThumbY,IndexX,IndexY = HandPos["ThumbX"],HandPos["ThumbY"],HandPos["IndexX"],HandPos["IndexY"]
 
-        MiddleHandX = abs(IndexX + ThumbX) / 2
-        MiddleHandY = abs(IndexY + ThumbY) / 2
-
-        MiddleObjX = abs(ObjX2 + ObjX1) / 2
-        MiddleObjY = abs(ObjY2 + ObjY1) / 2
-
-        if(IndexX and IndexY <= 0 ):
-            MiddleHandX = ThumbX
-            MiddleHandY = ThumbY
-        elif( ThumbX and ThumbY <= 0 ):
-            MiddleHandX = IndexX
-            MiddleHandY = IndexY
-
         width = abs(ObjX2 - ObjX1)
         height = abs(ObjY2 - ObjY1)
         area = width * height

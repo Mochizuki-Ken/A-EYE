@@ -13,6 +13,7 @@ class A_EYE():
     FONT_SIZE = 0.75
 
     def __init__(self,STREAM_INPUT) -> None:
+
         self.STREAM_INPUT = STREAM_INPUT
         self.TIMER = 0
 
@@ -118,9 +119,11 @@ class A_EYE():
 
                 if ( frame is not None ):
 
-                    if( self.FRAME_WIDTH == 0 and self.FRAME_HEIGHT == 0) :
+                    # Do When First Frame Captured
 
-                        #Do When First Frame Captured
+                    frame = cv2.resize(frame, (1080,720))
+
+                    if( self.FRAME_WIDTH == 0 and self.FRAME_HEIGHT == 0) :
 
                         self.FRAME_WIDTH = frame.shape[1]
                         self.FRAME_HEIGHT = frame.shape[0]
@@ -132,10 +135,10 @@ class A_EYE():
 
                         self.SPEAK.ThreadSpeak(temp="Welcome")
 
-
-
                         print(self.FRAME_WIDTH,self.FRAME_HEIGHT)
                     
+                    # Each Frame
+
                     self.frame = frame
 
                     self.ACTION.CURRENT_OBJECT_ANNOUNCEED = self.CURRENT_OBJECT_ANNOUNCEED 

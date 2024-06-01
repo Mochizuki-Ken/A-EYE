@@ -1,17 +1,20 @@
 from .voice import Voice
 from .sound import Sound
 from .speak import Text_To_Voice
+from .navigate import Navigate
 from .Data import *
 
 class Product():
     
-    def __init__(self) -> None:
+    def __init__(self,Frame_Width,Frame_Height) -> None:
         
         self.SOUND = Sound()
         
         self.VOICE = Voice()
 
         self.SPEAK = Text_To_Voice()
+
+        self.NAVIGATE = Navigate(Frame_Width,Frame_Height)
         
         self.TARGET_PRODUCTS = []
 
@@ -36,15 +39,19 @@ class Product():
     
     def GetProductsFromText(self,Text) :
 
+        if(Text==False):
+            return False
+
         Products_List = []
 
-        for Product in PRODUCT_LIST:
+        for Product in PRODUCT_LIST.keys():
 
             if Product in Text:
 
                 Products_List.append(Product)
 
         if( len( Products_List ) > 0 ):
+
             
             return Products_List
         
@@ -82,6 +89,8 @@ class Product():
 
             Input_Products_List = self.GetProductsFromText(Input_Text)
 
+            print(Input_Products_List)
+
             if Input_Text == False or Input_Text == "":
                 
                 if( c<3 ):
@@ -98,7 +107,7 @@ class Product():
 
                     self.SPEAK.ThreadSpeak(text="唔好意思,都係聽唔清楚, 請稍後再試")
 
-        if True:
+        if Input_Products_List:
 
             result = Input_Products_List
 
@@ -145,9 +154,9 @@ class Product():
 
             if(len(ProductList) == 0):
 
-                return
+                return False
 
-            
+            ProductList = self.NAVIGATE.ShortProductsByLocations(ProductList)
 
             for product in ProductList:
 
@@ -157,11 +166,13 @@ class Product():
 
             self.SOUND.ThreadPlaySound("Note-1")
 
+            self.SPEAK.ThreadSpeak(f"已經幫你由近到遠的區域重新排序商品")
+
             self.SPEAK.ThreadSpeak(f"添加尋找物品{Products_Text} 成功")
 
             self.SOUND.ThreadPlaySound("Note-1")
             
-            return self.TARGET_PRODUCTS
+            return self.TARGET_PRODUCTS #[Name]
 
 
     def CancelFindProduct(self):
@@ -252,10 +263,6 @@ class Product():
 
             self.TARGET_PRODUCT = ""    
 
-            self.SPEAK.ThreadSpeak(text = f"搵到目標物品 {Object_Name}")
-                            
-            self.SOUND.DoneSound()
-
             return True
         
         return False
@@ -263,6 +270,10 @@ class Product():
 
         
     def ChooseTargetProducts( self,Count = 1 ):
+
+        if(self.FOUND_PRODUCTS[0]=="Point1"):
+            self.FOUND_PRODUCTS.pop(0)
+            return
 
         if( len(self.FOUND_PRODUCTS) == 1 ):
 
@@ -274,7 +285,7 @@ class Product():
 
             print(f"搵到{self.TARGET_PRODUCT}")
 
-            return self.TARGET_PRODUCTS
+            return True
         
         elif ( Count <= 3):
 

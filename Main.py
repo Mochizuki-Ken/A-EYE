@@ -5,8 +5,9 @@ INPUT_MODE = 0
 
 if __name__ == "__main__":
 
+    # Mode = input("Mode: ")
+
+
     Aeye = AEYE.A_EYE(STREAM_INPUT=INPUT_MODE)
 
     Aeye.Start()
-
-
