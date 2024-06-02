@@ -4,7 +4,7 @@ from .AeyeMath import EYE_MATH
 from .sound import Sound
 from .speak import Text_To_Voice
 
-from .Data import PRODUCT_LOC_LIST,PRODUCT_LIST
+from .Data import *
 
 class Navigate():
 
@@ -27,6 +27,7 @@ class Navigate():
             "Left":"Food",
             "Right":"Daily",
             "Targets":["Food","Daily"],
+            "Distance":0
         },
         "Food":{
             "Front":None,
@@ -80,8 +81,6 @@ class Navigate():
 
         self.Navigating = False
 
-
-        
         if( Frame_Width >= 1920 and Frame_Height >= 1080) :
 
             self.CloseDistance = [150,350,500]
@@ -170,15 +169,27 @@ class Navigate():
 
     def ShortProductsByLocations(self,TargetProductList):
 
+        if TargetProductList == []:
+            return []
+
         CloserLocationProductList = []
 
         FarLocationProductList = []
 
-        if self.CurrentLocation == "":
+        if self.CurrentLocation == "" or (self.CurrentLocation == "Point1" and self.CurrentNavigateState[0] == "TooFar") :
 
-            CloserLocationProductList.append("Point1")
+            if( len(self.TargetLocations) == 0 or( len(self.TargetLocations) >= 1  and self.TargetLocations[0]!="Point1")):
+            
+                print(self.CurrentLocation)
+                
+                CloserLocationProductList.append("Point1")
+
+                print("Point1 ADDED")
+
 
         for product in TargetProductList:
+
+            print(product)
 
             if  self.Locations[PRODUCT_LIST[product]["Location"]]["Distance"] >= 20:
 
@@ -196,12 +207,26 @@ class Navigate():
     
     def UpdateTargetLocations(self,TargetProductList):
 
+        if TargetProductList == [] or (len(self.TargetLocations)>=1 and self.TargetLocations[0] == "Point1"):
+
+            self.TargetLocations = []
+
+            return
+
         for product in TargetProductList:
 
             self.TargetLocations.append(PRODUCT_LIST[product]["Location"] )
 
         return TargetProductList
     
+    def GetTargetAreaText(self):
+        if(len(self.TargetLocations)>=1 and self.TargetLocations[0]!="Point1"):
+            return LOC_CHI[self.TargetLocations[0]]
+        elif(len(self.TargetLocations) >=2):
+            if(self.TargetLocations[0]=="Point1"):
+                return LOC_CHI[self.TargetLocations[1]]
+            
+        return "目標區域"
 
     def MoveFront(self,Text = ""):
 
@@ -210,7 +235,7 @@ class Navigate():
         if( not self.Navigating ) : 
 
             if(Text == "Point1" and len(self.TargetLocations)>1) : self.SPEAK.ThreadSpeak("導航會先帶你去中轉點然後前往目標區域, 導航開始")
-            else : self.SPEAK.ThreadSpeak("導航會帶你前往目標區域, 導航開始")
+            else : self.SPEAK.ThreadSpeak(f"導航會帶你前往{self.GetTargetAreaText()}, 導航開始")
             self.SOUND.ThreadPlaySound("Note-1")
             
             self.SPEAK.Say("請向前行直至音效提示")
@@ -229,7 +254,7 @@ class Navigate():
 
         if( not self.Navigating ) : 
 
-            self.SPEAK.ThreadSpeak("導航會帶你前往目標區域, 導航開始")
+            self.SPEAK.ThreadSpeak(f"導航會帶你前往{self.GetTargetAreaText()}, 導航開始")
             self.SOUND.ThreadPlaySound("Note-1")
             
             self.SPEAK.Say("請轉向後方然後前行直至音效提示")
@@ -266,18 +291,22 @@ class Navigate():
 
     def NavigateArea(self):
 
-        print("NA")
+        # print("NA")
 
-        print(self.CurrentLocation)
+        # print(self.CurrentLocation)
 
         print("dddd-",self.TargetLocations)
+        print(self.CurrentLocation)
 
-        print(self.CurrentNavigateState[0])
+        if len(self.TargetLocations) >1 and self.CurrentLocation == self.TargetLocations[1]:
+
+            self.TargetLocations.pop(0)
+
+        # print(self.CurrentNavigateState[0])
 
         if( self.CurrentLocation == "" and self.TargetLocations[0] == "Point1"):
 
             self.MoveFront(Text="Point1")
-
 
         elif( self.CurrentLocation == self.TargetLocations[0] and self.CurrentNavigateState[0] == "TooFar"):
 
@@ -303,20 +332,18 @@ class Navigate():
     
     def UpdateCurrentLocation(self):
 
+        print(self.CurrentLocation)
+
         CurrentFrontSignName = self.CurrentSign[0]
+
+        if(CurrentFrontSignName==""):return
 
         self.CurrentLocation = PRODUCT_LIST[CurrentFrontSignName]["Location"]
 
         Width = self.CurrentSign[1]["Width"]
         Height = self.CurrentSign[1]["Height"]
 
-        print(self.CurrentLocation)
-
-        if(len(self.TargetLocations)==0):
-
-            return
-
-        if ( self.TargetLocations[0] == "Point1" and CurrentFrontSignName != "Point1" and len(self.TargetLocations)>1 and CurrentFrontSignName == self.TargetLocations[1]):
+        if ( len(self.TargetLocations)>=1 and self.TargetLocations[0] == "Point1" and self.CurrentLocation != "Point1" and len(self.TargetLocations)>1 and self.CurrentLocation == self.TargetLocations[1]):
             
             self.TargetLocations.pop(0)
 
@@ -324,7 +351,11 @@ class Navigate():
 
                 self.Navigating = False
 
-        if( self.TargetLocations[0] == "Point1" and CurrentFrontSignName != "Point1" and len(self.TargetLocations)>1 and CurrentFrontSignName != self.TargetLocations[1]):
+            print("dddddd",self.TargetLocations)
+
+            return
+
+        if( len(self.TargetLocations)>=1 and self.TargetLocations[0] == "Point1" and self.CurrentLocation != "Point1" and len(self.TargetLocations)>1 and self.CurrentLocation != self.TargetLocations[1]):
 
             self.TargetLocations.pop(0)
 
@@ -336,11 +367,11 @@ class Navigate():
 
                 self.Navigating = False
 
-        elif(self.IsOnCurrentLocation and self.CurrentLocation == self.TargetLocations[0] ):
+        # elif( len(self.TargetLocations)>=1 and self.IsOnCurrentLocation and self.CurrentLocation == self.TargetLocations[0] ):
 
-            self.CurrentNavigateState = ["Arrived",0]
+        #     self.CurrentNavigateState = ["Arrived",0]
 
-            self.IsOnCurrentLocation = True
+        #     self.IsOnCurrentLocation = True
 
         elif( abs(Width - PRODUCT_LIST[CurrentFrontSignName]["Width"]) <= PRODUCT_LIST[CurrentFrontSignName]["AcceptableError"] and abs(Height - PRODUCT_LIST[CurrentFrontSignName]["Height"]) <=  PRODUCT_LIST[CurrentFrontSignName]["AcceptableError"]):
 

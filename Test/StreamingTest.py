@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 # detection = DETECTION()
 
-# cap = cv2.VideoCapture("udp://192.168.0.125:1234") 
+cap = cv2.VideoCapture("udp://192.168.0.125:1234") 
 
-cap = cv2.VideoCapture(0) 
+# cap = cv2.VideoCapture(0) 
 
 GREEN = (0, 255, 0) 
 
@@ -27,7 +27,7 @@ while True:
     #             cv2.rectangle(frame,(int(i[0]),int(i[1])),(int(i[2]),int(i[3])),GREEN,2)
     #             cv2.putText(frame,detection.Daily_Objects_List[int(i[5])],(int(i[0]),int(i[1])),cv2.FONT_HERSHEY_COMPLEX ,0.6,GREEN,2)
 
-    frame = rotate_image(frame,90)
+    # frame = rotate_image(frame,90)
     cv2.imshow("frame", frame) 
     # else : break
   
@@ -41,4 +41,4 @@ cv2.destroyAllWindows()
 # img = cv2.imread('./example.jpg')
 # detection.detect_Daily_Objects(img)
 
-# raspivid -o - -t 0 -w 600 -h 300 -fps 25 -b 1200000 | ffmpeg -i - -c copy -f mpegts udp://192.168.0.125:1234
+# raspivid -o - -t 0 -w 400 -h 200 -fps 20 -b 7000000 | ffmpeg -i - -c copy -f mpegts udp://192.168.0.125:1234

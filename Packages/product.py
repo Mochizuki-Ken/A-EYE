@@ -23,6 +23,8 @@ class Product():
         self.FOUND_PRODUCTS_POS ={}
         
         self.FOUND_PRODUCTS = []
+
+        self.ALL_CURRENT_PRODUCT_POS = []
         
         pass
         
@@ -32,8 +34,10 @@ class Product():
         TEXT = ""
         
         for product in Products_Array:
+
+            if product!="Point1":
             
-            TEXT += product+","
+                TEXT += product+","
             
         return TEXT
     
@@ -70,6 +74,23 @@ class Product():
         else :
 
             self.SPEAK.ThreadSpeak("現在目標商品包括,"+ProductString)
+
+    def GetCorrectProductPosAdvice(self,X):
+
+        for Product in self.ALL_CURRENT_PRODUCT_POS:
+
+            if(Product["Name"] == self.TARGET_PRODUCT):
+
+                if(Product["X"] < X):
+
+                    self.SPEAK.Say(f"目標商品{self.TARGET_PRODUCT} 喺左邊")
+                
+                else:
+
+                    self.SPEAK.Say(f"目標商品{self.TARGET_PRODUCT} 喺右邊")
+
+
+
 
     def FindProduct(self,Input_Text = "",c = 1):
 
@@ -135,7 +156,7 @@ class Product():
 
                             self.SOUND.ThreadPlaySound("Note-1")
 
-                            self.SPEAK.ThreadSpeak(f"好,成功將物品更改為{RECOMAND_LIST[product_name][0]}")
+                            self.SPEAK.ThreadSpeak(f"好,成功將物品更改為{product_name}")
 
                             
                         else:
@@ -166,7 +187,7 @@ class Product():
 
             self.SOUND.ThreadPlaySound("Note-1")
 
-            self.SPEAK.ThreadSpeak(f"已經幫你由近到遠的區域重新排序商品")
+            # self.SPEAK.ThreadSpeak(f"已經幫你由近到遠的區域重新排序商品")
 
             self.SPEAK.ThreadSpeak(f"添加尋找物品{Products_Text} 成功")
 
@@ -214,6 +235,8 @@ class Product():
             DEL_PRODUCTS_STRING = self.GetProductString(DEL_PRODUCTS)
             
             self.SPEAK.Say(DEL_PRODUCTS_STRING)
+
+            self.SOUND.ThreadPlaySound( Type = "Note-1")
             
             if ( self.VOICE.Confirm() ) :
                 
@@ -222,10 +245,16 @@ class Product():
                     INDEX = self.TARGET_PRODUCTS.index(Product)
                     
                     self.TARGET_PRODUCTS.pop(INDEX)
+
+                if(len(self.TARGET_PRODUCTS) == 1 and self.TARGET_PRODUCTS[0] == "Point1"):
+
+                    self.TARGET_PRODUCTS = []
                     
                 self.SPEAK.ThreadSpeak("成功刪除商品.")
                 
                 self.SOUND.ThreadPlaySound("Note-1")
+
+                self.TARGET_PRODUCTS = self.NAVIGATE.ShortProductsByLocations(self.TARGET_PRODUCTS)
 
             else:
 
@@ -233,7 +262,6 @@ class Product():
                 
                 self.SOUND.ThreadPlaySound("Note-1")
 
-            
             return self.TARGET_PRODUCTS
         
         else:
@@ -313,7 +341,7 @@ class Product():
 
             self.SOUND.ThreadPlaySound( Type = "Note-1")
 
-            UserInput = self.VOICE.StartCantonese()
+            UserInput = self.VOICE.StartCantonese(Text="")
             
             
 
@@ -325,7 +353,7 @@ class Product():
             
             else :
                  
-                self.ChooseTargetObject(Count+1)
+                self.ChooseTargetProducts(Count+1)
             
         else:
 

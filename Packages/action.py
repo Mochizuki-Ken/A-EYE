@@ -24,7 +24,7 @@ class Action():
 
     def ActionCheck(self,TIME):
 
-        if(TIME-self.ACTION_STATE[1]>=12 and self.ACTION_STATE[1] != 0):
+        if(TIME-self.ACTION_STATE[1]>=8 and self.ACTION_STATE[1] != 0):
 
             self.ACTION_STATE=[0,0,0,"NONE","NONE"]
 
@@ -51,7 +51,7 @@ class Action():
 
             return False
         
-        if( max(HandArea,area)/min(HandArea,area) <= 1.3  or HandArea < area):
+        if( max(HandArea,area)/min(HandArea,area) <= 1.5  or HandArea < area):
 
             print("abs(HandArea - area) <= 300")
 

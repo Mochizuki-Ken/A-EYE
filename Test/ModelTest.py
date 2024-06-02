@@ -15,7 +15,7 @@ Video_Input = 0 #"http://172.20.10.11:5000/video_feed"
 
 cap = cv2.VideoCapture(Video_Input) 
   
-GREEN = (0, 255, 0) 
+GREEN = (102, 255, 255) 
 
 Objects = ["Apple","Chips1","Chips2","MiddleSign","Cafe","Orange","Tempo","ToothPaste","ToothPaste2","Water-Bottle","hkd10","hkd100","hkd20","hkd50","hkd500","hkd1000","orange"]
 
@@ -27,7 +27,7 @@ while True:
 
         frame = cv2.resize(frame, (900,600))
    
-        results = Model.predict(frame,conf=0.6)
+        results = Model.predict(frame,conf=0.6,verbose=False)
         # ModelResult = ModelResult.pandas().xyxy[0][['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class']].values
 
         boxes = results[0].boxes.cpu().numpy()
@@ -46,10 +46,10 @@ while True:
             Confidence = CONFIDENCE[i]
                 
             cv2.rectangle(frame,(x1,y1),(x2,y2),GREEN,2)
-            cv2.putText(frame,Object_Name,(x1,y1),cv2.FONT_HERSHEY_COMPLEX ,0.6,GREEN,2)
+            cv2.putText(frame,Object_Name,(x1,y1),cv2.FONT_HERSHEY_COMPLEX ,0.6,GREEN,1)
 
-            cv2.putText(frame,f"W:{x2-x1}",(x1,y1-50),cv2.FONT_HERSHEY_COMPLEX ,1,GREEN,2)
-            cv2.putText(frame,f"H:{y2-y1}",(x1,y1-25),cv2.FONT_HERSHEY_COMPLEX ,1,GREEN,2)
+            cv2.putText(frame,f"W:{x2-x1}",(x1,y1-50),cv2.FONT_HERSHEY_COMPLEX ,0.7,GREEN,1)
+            cv2.putText(frame,f"H:{y2-y1}",(x1,y1-25),cv2.FONT_HERSHEY_COMPLEX ,0.7,GREEN,1)
 
 
         cv2.imshow("",frame)

@@ -4,13 +4,9 @@ from .action import Action
 from .handPose import HandPose
 from .objects import Objects
 from .speak import Text_To_Voice
+from .Data import *
 
 class A_EYE():
-
-    GREEN = (0, 255, 0) 
-    RED = (0, 0, 255) 
-    BLUE = (255, 0, 0) 
-    FONT_SIZE = 0.75
 
     def __init__(self,STREAM_INPUT) -> None:
 
@@ -38,19 +34,18 @@ class A_EYE():
 
         cv2.putText(
             self.frame,
-            'Time'+str(self.TIMER)+"",
+            'TIME | '+str(self.TIMER)+"",
             (20,45),
             cv2.FONT_HERSHEY_COMPLEX ,
-            self.FONT_SIZE,self.GREEN,2
+            FONT_SIZE,COLOR,2
         )
-
+        # f"up/down {self.ACTION_STATE[0]} | last time {self.ACTION_STATE[1]} | count {self.ACTION_STATE[2]} | {self.ACTION_STATE[3]}",
         cv2.putText(
             self.frame,
-            f"up/down {self.ACTION_STATE[0]} | last time {self.ACTION_STATE[1]} | count {self.ACTION_STATE[2]} | {self.ACTION_STATE[3]}",
+            f"CURRENT MOTION | {self.ACTION_STATE[3]}",
             (20,90),
             cv2.FONT_HERSHEY_COMPLEX ,
-            self.FONT_SIZE,self.GREEN,
-            2
+            FONT_SIZE,COLOR,2
         )
 
     def Streaming(self):
@@ -123,6 +118,8 @@ class A_EYE():
 
                     frame = cv2.resize(frame, (1080,720))
 
+                    
+
                     if( self.FRAME_WIDTH == 0 and self.FRAME_HEIGHT == 0) :
 
                         self.FRAME_WIDTH = frame.shape[1]
@@ -149,6 +146,8 @@ class A_EYE():
                     self.TIMER += 1
 
                     self.OBJECT.TIMER = self.TIMER
+
+                    print(f"_____________FRAME {self.TIMER}_______________")
 
                     frame = self.Service()
 
