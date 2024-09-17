@@ -5,7 +5,6 @@
     </video>
     <h1 style="color: #4CAF50; animation: fadeIn 1s ease-in-out;">A-EYE: Empowering the Daily Shopping Experience for the Visually Impaired</h1>
     <p style="font-size: 18px; color: #757575; animation: slideInLeft 1s ease-in-out;">A-EYE is a revolutionary assistive technology designed to enhance the convenience and independence of visually impaired individuals during their everyday shopping experiences. By integrating advanced technologies such as Python, YOLOv8, PyTorch, OpenCV, and Raspberry Pi, A-EYE offers a comprehensive range of functionalities, including product recognition, price comparison, discount inquiry, currency recognition, navigation guidance, and safety assurance, enabling them to confidently take control of their shopping process.</p>
-    
     <h2 style="color: #2196F3; animation: fadeInDown 1s ease-in-out;">A-EYE Product Series</h2>
     <p style="font-size: 16px; color: #9E9E9E; animation: slideInRight 1s ease-in-out;">The A-EYE product series includes three different versions to meet various usage scenarios and needs:</p>
     <ul style="font-size: 16px; color: #9E9E9E; animation: fadeInUp 1s ease-in-out;">
@@ -13,7 +12,6 @@
         <li><strong style="color: #673AB7;">A-EYE Slim:</strong> A more compact and lightweight Raspberry Pi design, suitable for everyday outings.</li>
         <li><strong style="color: #673AB7;">A-EYE Mobile:</strong> A software application launched for smartphone users, enabling shopping assistance features on daily mobile devices.</li>
     </ul>
-    
     <h2 style="color: #E91E63; animation: fadeInDown 1s ease-in-out;">Innovative Features</h2>
     <p style="font-size: 16px; color: #9E9E9E; animation: slideInLeft 1s ease-in-out;">Core features of A-EYE include:</p>
     <ul style="font-size: 16px; color: #9E9E9E; animation: fadeInUp 1s ease-in-out;">
@@ -24,13 +22,10 @@
         <li><strong style="color: #FF9800;">Navigation Guidance:</strong> Combining indoor and outdoor navigation systems, A-EYE provides users with complete shopping route guidance, helping them shop safely and efficiently.</li>
         <li><strong style="color: #FF9800;">Safety Assurance:</strong> A-EYE is equipped with multiple safety features, such as item tracking and location monitoring, to enhance security for visually impaired individuals while shopping.</li>
     </ul>
-    
     <h2 style="color: #9C27B0; animation: fadeInDown 1s ease-in-out;">Open Source Sharing</h2>
     <p style="font-size: 16px; color: #9E9E9E; animation: slideInRight 1s ease-in-out;">All A-EYE products adopt an open-source model, allowing developers and enthusiasts to freely participate, optimize, and expand this innovative technology. We look forward to collaborating with the community to provide visually impaired individuals with a more convenient and safe shopping experience.</p>
-    
     <h2 style="color: #3F51B5; animation: fadeInDown 1s ease-in-out;">Merchant Collaboration</h2>
     <p style="font-size: 16px; color: #9E9E9E; animation: slideInLeft 1s ease-in-out;">In addition to providing convenience for visually impaired users, A-EYE can also bring positive value to partnering merchants. By integrating with the A-EYE system, merchants can better understand the needs of visually impaired consumers, offer targeted services and discounts, and gain valuable user insights and shopping data to support business development. We welcome more merchants to join the A-EYE partnership.</p>
-    
     <h2 style="color: #9C27B0; animation: fadeInDown 1s ease-in-out;">Project Founder</h2>
     <p>Learn more about the project founder: <a href="https://mochizuki-ken.web.app">Mochizuki Ken - Personal Website</a></p>
 </div>
